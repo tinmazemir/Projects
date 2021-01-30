@@ -46,12 +46,8 @@ def move_images_to_undated_folder(target_folder):
 		f.close()
 		#print(undated_check)
 		for img in undated_check:
-			if(os.path.isdir(img) == False):#Calismiyor
+			if(os.path.isdir(img) == False):#Some times be a problem
 				undated.append(img)
-		'''
-		for i in undated:
-			print(i[:-1])
-		'''
 		for img in undated:
 			img = img[:-1]
 			if(os.path.isdir(target_folder+'\\'+"Undated") == True):
@@ -64,3 +60,31 @@ def move_images_to_undated_folder(target_folder):
 #copy_images_to_folder(Path)
 #move_images_to_folder(Path)
 #move_images_to_undated_folder(Path)
+
+counter = 0
+while(counter <= 3):
+	try:
+		Path = input("Path to images folder:")
+		load_images_from_folder(Path)
+	except FileNotFoundError:
+		print("Path is wrong, Please refresh the folder path:")
+	counter += 1
+
+if(counter < 3):	
+	while(True):
+		slc = input("'copy' or 'move' images to folder separated by day :") 
+		if(slc.upper() == "COPY"):
+			copy_images_to_folder(Path)
+			break
+		elif(slc.upper() == "MOVE"):
+			move_images_to_folder(Path)
+			break
+	while(True):
+		undt = input("'yes' or 'no' for creating can't separated images :")
+		if(undt.upper() == "YES"):
+			move_images_to_undated_folder(Path)
+			break
+		elif(undt.upper() == "NO"):
+			break
+else:
+	print("We have some problems !!")
