@@ -3,12 +3,11 @@ import os
 
 images = {}
 
-Path = ""
+Path = "D:\\Code\\Projects\\Photo-Separated-by-Date\\test\\Monthly"
 
 def load_images_from_folder(folder):
 	f = open(folder+"\\ErrorFile.txt", "w")
 	for filename in os.listdir(folder):
-		pass
 		img = os.path.join(folder,filename)
 		try:
 			img_date = Image.open(os.path.join(folder,filename)).getexif()[36867].split()[0]
@@ -20,23 +19,35 @@ def load_images_from_folder(folder):
 			f.write(img+'\n')
 	f.close()
 			
-def copy_images_to_folder(target_folder):
+def copy_images_to_folder(target_folder, type = "M"):
 	for img in images:
 		#print(img+" -:- "+images[img])
-		if(os.path.exists(target_folder+'\\'+images[img]) == True):
-			os.system(str("copy "+ img +"   "+target_folder+'\\'+images[img]))
+		path_folder_name = images[img] 
+		if(type == "M"):
+			path_folder_name = path_folder_name.split(".")[:-1]
+			path_folder_name = str(path_folder_name[0]+"."+path_folder_name[1])
+			print(path_folder_name)
+		
+		if(os.path.exists(target_folder+'\\'+path_folder_name) == True):
+			os.system(str("copy "+ img +"   "+target_folder+'\\'+path_folder_name))
 		else:
-			os.system("mkdir  "+target_folder+'\\'+images[img])
-			os.system(str("copy "+ img +"   "+target_folder+'\\'+images[img]))
+			os.system("mkdir  "+target_folder+'\\'+path_folder_name)
+			os.system(str("copy "+ img +"   "+target_folder+'\\'+path_folder_name))
+			
+def move_images_to_folder(target_folder, type = "M" ):
+	for img in images:
+		#print(img+" -:- "+path_folder_name)
+		path_folder_name = images[img] 
+		if(type == "M"):
+			path_folder_name = path_folder_name.split(".")[:-1]
+			path_folder_name = str(path_folder_name[0]+"."+path_folder_name[1])
+			print(path_folder_name)
 
-def move_images_to_folder(target_folder):
-	for img in images:
-		#print(img+" -:- "+images[img])
-		if(os.path.exists(target_folder+'\\'+images[img]) == True):
-			os.system(str("move "+ img +"   "+target_folder+'\\'+images[img]))
+		if(os.path.exists(target_folder+'\\'+path_folder_name) == True):
+			os.system(str("move "+ img +"   "+target_folder+'\\'+path_folder_name))
 		else:
-			os.system("mkdir  "+target_folder+'\\'+images[img])
-			os.system(str("move "+ img +"   "+target_folder+'\\'+images[img]))
+			os.system("mkdir  "+target_folder+'\\'+path_folder_name)
+			os.system(str("move "+ img +"   "+target_folder+'\\'+path_folder_name))
 
 def move_images_to_undated_folder(target_folder):
 	if(os.path.isfile(target_folder+'\\'+"ErrorFile.txt") == True):
@@ -46,8 +57,10 @@ def move_images_to_undated_folder(target_folder):
 		f.close()
 		#print(undated_check)
 		for img in undated_check:
-			if(os.path.isdir(img) == False):#Some times be a problem
-				undated.append(img)
+			#print(img)
+			if(os.path.isdir(str(img)) == False):# \ tan dolayi isdir duzgun calisiyor klasor icindeki alt klasorleri de undated olarak isaretlip tasiyor 
+				undated.append(img)	
+		#print(undated)
 		for img in undated:
 			img = img[:-1]
 			if(os.path.isdir(target_folder+'\\'+"Undated") == True):
@@ -55,36 +68,9 @@ def move_images_to_undated_folder(target_folder):
 			else:
 				os.system("mkdir  "+target_folder+'\\'+"Undated")
 				os.system("move "+ img +"   "+target_folder+'\\'+"Undated")
-		
-#load_images_from_folder(Path)
-#copy_images_to_folder(Path)
-#move_images_to_folder(Path)
-#move_images_to_undated_folder(Path)
 
-counter = 0
-while(counter <= 3):
-	try:
-		Path = input("Path to images folder:")
-		load_images_from_folder(Path)
-	except FileNotFoundError:
-		print("Path is wrong, Please refresh the folder path:")
-	counter += 1
 
-if(counter < 3):	
-	while(True):
-		slc = input("'copy' or 'move' images to folder separated by day :") 
-		if(slc.upper() == "COPY"):
-			copy_images_to_folder(Path)
-			break
-		elif(slc.upper() == "MOVE"):
-			move_images_to_folder(Path)
-			break
-	while(True):
-		undt = input("'yes' or 'no' for creating can't separated images :")
-		if(undt.upper() == "YES"):
-			move_images_to_undated_folder(Path)
-			break
-		elif(undt.upper() == "NO"):
-			break
-else:
-	print("We have some problems !!")
+load_images_from_folder(Path)
+#copy_images_to_folder(Path , "D")
+move_images_to_folder(Path , "M")
+move_images_to_undated_folder(Path)
