@@ -11,9 +11,9 @@ Unfollowers = []
 Unfollowing = []
 
 def cleaner(CleaningList,CleanList):
-	for i in CleaningList:
-		if(i['username'] not in CleanList):
-		   CleanList.append(i['username'])
+   for i in CleaningList:
+      if(i['username'] not in CleanList):     	      
+         CleanList.append(i['username'])
 
 def finder(UNF, Mode, FollowersClean, FollowingClean):
    if(Mode == "unfollowers"):
@@ -51,9 +51,8 @@ def finder_on_cmd():
    os.system("cls")
    
    #taking data from instagram
-   Followers = api.getTotalFollowers(user_id)
+   Followers = api.getTotalFollowers(user_id)#eksik kullanici aliyor?? Unofficial API problem
    Following = api.getTotalFollowings(user_id)
-   
    cleaner(Followers,FollowersClean)
    cleaner(Following,FollowingClean)
    process(Mode= "unfollowers", UNF_For_finder= Unfollowers, Followers_For_finder= FollowersClean, Following_For_finder= FollowingClean)
@@ -63,4 +62,3 @@ def finder_on_cmd():
 
 
 
-#finder_on_cmd()
